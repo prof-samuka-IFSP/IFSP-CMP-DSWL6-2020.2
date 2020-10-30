@@ -4,5 +4,5 @@ Este repositório contém todos os códigos desenvolvimentos em sala de aula do 
 
 **Professor:** [Samuel Martins (Samuka)](http://hisamuka.github.io/) - [@hisamuka](https://github.com/hisamuka)
 
-#### Aulas
+### Aulas
 1. [Revisão Java](https://github.com/xavecoding/IFSP-CMP-DSWL6-2020.2/tree/master/mega_revisao_java) 
