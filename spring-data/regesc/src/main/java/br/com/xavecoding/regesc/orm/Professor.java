@@ -2,6 +2,7 @@ package br.com.xavecoding.regesc.orm;
 
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "professores")
@@ -13,6 +14,9 @@ public class Professor {
     private String nome;
     @Column(nullable = false, unique = true)
     private String prontuario;
+
+    @OneToMany(mappedBy = "professor", fetch = FetchType.LAZY)
+    private List<Disciplina> disciplinas;
 
     @Deprecated  // só para indicar que nós não a usaremos muito, ou que ela será usada por outras bibliotecas externas
     public Professor() { }
@@ -44,6 +48,23 @@ public class Professor {
 
     public void setProntuario(String prontuario) {
         this.prontuario = prontuario;
+    }
+
+    public List<Disciplina> getDisciplinas() {
+        return disciplinas;
+    }
+
+    public void setDisciplinas(List<Disciplina> disciplinas) {
+        this.disciplinas = disciplinas;
+    }
+
+    // ON REMOVE SET NULL
+    @PreRemove
+    public void atualizaDisciplinasOnRemove() {
+        System.out.println("******* atualizaDisciplinasOnRemove *******");
+        for (Disciplina disciplina : this.getDisciplinas()) {
+            disciplina.setProfessor(null);
+        }
     }
 
     @Override

@@ -1,9 +1,11 @@
 package br.com.xavecoding.regesc.service;
 
+import br.com.xavecoding.regesc.orm.Disciplina;
 import br.com.xavecoding.regesc.orm.Professor;
 import br.com.xavecoding.regesc.repository.ProfessorRepository;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -17,7 +19,7 @@ public class CrudProfessorService {
         this.professorRepository = professorRepository;
     }
 
-
+    @Transactional
     public void menu(Scanner scanner) {
         Boolean isTrue = true;
 
@@ -28,6 +30,7 @@ public class CrudProfessorService {
             System.out.println("2 - Atualizar um Professor");
             System.out.println("3 - Visualizar todos os Professores");
             System.out.println("4 - Deletar um Professor");
+            System.out.println("5 - Visualizar um Professor");
 
             int opcao = scanner.nextInt();
 
@@ -43,6 +46,9 @@ public class CrudProfessorService {
                     break;
                 case 4:
                     this.deletar(scanner);
+                    break;
+                case 5:
+                    this.visualizarProfessor(scanner);
                     break;
                 default:
                     isTrue = false;
@@ -135,5 +141,30 @@ public class CrudProfessorService {
         Long id = scanner.nextLong();
         this.professorRepository.deleteById(id);  // lançará uma exception se não achar o ID passado na tabela
         System.out.println("Professor Deletado!\n");
+    }
+
+    @Transactional
+    private void visualizarProfessor(Scanner scanner) {
+        System.out.print("Id do Professor: ");
+        Long id = scanner.nextLong();
+
+        Optional<Professor> optional = professorRepository.findById(id);
+        if (optional.isPresent()) {
+            Professor professor = optional.get();
+
+            System.out.println("Professor: {");
+            System.out.println("ID: " + professor.getId());
+            System.out.println("Nome: " + professor.getNome());
+            System.out.println("Prontuario: " + professor.getProntuario());
+            System.out.println("Disciplinas: [");
+
+            for (Disciplina disciplina : professor.getDisciplinas()) {
+                System.out.println("\tId: " + disciplina.getId());
+                System.out.println("\tNome: " + disciplina.getNome());
+                System.out.println("\tSemestre: " + disciplina.getSemestre());
+                System.out.println();
+            }
+            System.out.println("]\n}");
+        }
     }
 }
